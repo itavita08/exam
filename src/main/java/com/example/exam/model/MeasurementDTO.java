@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -36,9 +37,15 @@ public class MeasurementDTO implements FieldSetMapper<MeasurementDTO> {
             throw new RuntimeException(e);
         }
 
+        String pm10Value = fieldSet.readString(3);
+        Integer pm10 = (!pm10Value.isBlank()) ? Integer.valueOf(pm10Value) : null;
+
+        String pm25Value = fieldSet.readString(4);
+        Integer pm25 = (!pm25Value.isBlank()) ? Integer.valueOf(pm25Value) : null;
+
         return MeasurementDTO.builder().measuredAt(measuredAt).stationName(fieldSet.readString(1))
-                .stationId(fieldSet.readInt(2)).pm10(fieldSet.readInt(3))
-                .pm25(fieldSet.readInt(4)).build();
+                .stationId(fieldSet.readInt(2)).pm10(pm10)
+                .pm25(pm25).build();
     }
 
     private Timestamp parseTimestamp(String timestampString) throws ParseException {
