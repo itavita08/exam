@@ -10,6 +10,7 @@ import com.example.exam.repository.InspectionRepository;
 import com.example.exam.repository.MeasurementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
@@ -29,8 +30,9 @@ public class AlertIssueService {
     private final InspectionRepository inspectionRepository;
     private final AlertIssueRepository alertIssueRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<AlertIssueDTO> sendAlert(String date) throws ParseException {
+
         List<Measurement> measurementList = measurementRepository.findAllByMeasurementAt(parseTimestamp(date));
         List<AlertIssueDTO> alerts = new ArrayList<>();
         for(Measurement m : measurementList){
@@ -46,7 +48,7 @@ public class AlertIssueService {
         return alerts;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.NESTED)
     public void saveInspection(Measurement m){
         inspectionRepository.saveAndFlush(Inspection.builder()
                 .stationId(m.getStationId())
@@ -54,7 +56,7 @@ public class AlertIssueService {
                 .build());
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.NESTED)
     public AlertIssueDTO saveAlertIssue(Measurement m, AlertLevel level){
         AlertIssue entity = alertIssueRepository.saveAndFlush(AlertIssue.builder()
                         .stationId(m.getStationId())
