@@ -38,7 +38,7 @@ public class FileReaderJobConfig {
     @Bean
     public Step fileReadStep(JobRepository jobRepository, PlatformTransactionManager platformTransactionManager){
         return new StepBuilder("fileReadStep", jobRepository)
-                .<MeasurementDTO, Measurement>chunk(1, platformTransactionManager)
+                .<MeasurementDTO, Measurement>chunk(100, platformTransactionManager)
                 .reader(itemReader())
                 .processor(itemProcessor())
                 .writer(itemWriter())
@@ -50,7 +50,8 @@ public class FileReaderJobConfig {
     public FlatFileItemReader<MeasurementDTO> itemReader(){
         return new FlatFileItemReaderBuilder<MeasurementDTO>()
                 .name("itemRead")
-                .resource(new FileSystemResource("src/main/resources/test.csv"))
+                .resource(new FileSystemResource("src/main/resources/2023년3월_서울시_미세먼지.csv"))
+//                .resource(new FileSystemResource("src/main/resources/test.csv"))
                 .encoding("UTF-8")
                 .lineTokenizer(new DelimitedLineTokenizer())
                 .linesToSkip(1)
