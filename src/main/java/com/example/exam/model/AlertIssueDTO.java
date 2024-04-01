@@ -1,7 +1,6 @@
 package com.example.exam.model;
 
 import com.example.exam.model.entity.AlertIssue;
-import com.example.exam.model.entity.Station;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;

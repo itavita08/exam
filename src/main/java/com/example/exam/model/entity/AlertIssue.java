@@ -2,7 +2,10 @@ package com.example.exam.model.entity;
 
 import com.example.exam.model.AlertLevel;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
