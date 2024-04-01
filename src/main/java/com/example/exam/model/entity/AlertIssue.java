@@ -2,13 +2,14 @@ package com.example.exam.model.entity;
 
 import com.example.exam.model.AlertLevel;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "alert_issue")
 public class AlertIssue {
