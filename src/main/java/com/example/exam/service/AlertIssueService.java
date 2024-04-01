@@ -8,6 +8,7 @@ import com.example.exam.model.entity.Measurement;
 import com.example.exam.repository.AlertIssueRepository;
 import com.example.exam.repository.InspectionRepository;
 import com.example.exam.repository.MeasurementRepository;
+import com.example.exam.utils.TimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,10 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +32,7 @@ public class AlertIssueService {
     @Transactional
     public List<AlertIssueDTO> sendAlert(String date) throws ParseException {
 
-        List<Measurement> measurementList = measurementRepository.findAllByMeasurementAt(parseTimestamp(date));
+        List<Measurement> measurementList = measurementRepository.findAllByMeasurementAt(TimeUtils.parseTime(date));
         List<AlertIssueDTO> alerts = new ArrayList<>();
         for(Measurement m : measurementList){
             if(m.getPm10() == 0 || m.getPm25() == 0) {
@@ -83,12 +82,5 @@ public class AlertIssueService {
             return null;
         }
         return null;
-    }
-
-
-    public Timestamp parseTimestamp(String timestampString) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH");
-        Date parsedDate = dateFormat.parse(timestampString);
-        return new Timestamp(parsedDate.getTime());
     }
 }

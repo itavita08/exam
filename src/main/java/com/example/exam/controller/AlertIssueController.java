@@ -2,6 +2,7 @@ package com.example.exam.controller;
 
 import com.example.exam.model.AlertIssueDTO;
 import com.example.exam.service.AlertIssueService;
+import com.example.exam.utils.TimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -32,7 +31,7 @@ public class AlertIssueController {
     @Scheduled(cron = "0 * * * * *")
     public void handleAlarm() throws ParseException {
         List<AlertIssueDTO> resultList = alertIssueService.sendAlert(virtualTime);
-        virtualTime = plusTime(virtualTime);
+        virtualTime = TimeUtils.plusTime(virtualTime);
 
         // 클라이언트 서버로 알림 전달
         RestTemplate restTemplate = new RestTemplate();
@@ -43,11 +42,5 @@ public class AlertIssueController {
         String clientServer = "http://localhost:80/client";
 
         restTemplate.postForObject(clientServer, requestEntity, String.class);
-    }
-
-    public String plusTime(String time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
-        LocalDateTime dateTime = LocalDateTime.parse(time, formatter).plusHours(1);
-        return formatter.format(dateTime);
     }
 }
