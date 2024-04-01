@@ -69,9 +69,9 @@ public class AlertIssueService {
         if(m.getPm25() >= 75 || m.getPm10() >= 150){
             LocalDateTime minusHour = m.getMeasuredAt().toLocalDateTime().minusHours(1);
             LocalDateTime minus2Hour = m.getMeasuredAt().toLocalDateTime().minusHours(2);
-            Optional<List<int[]>> measurements = measurementRepository.findByMeasurementAt(Timestamp.valueOf(minusHour), Timestamp.valueOf(minus2Hour), m.getStationId());
+            Optional<List<int[]>> measurements = measurementRepository.findByMeasurementAt(Timestamp.valueOf(minus2Hour), Timestamp.valueOf(minusHour), m.getStationId());
 
-            if(measurements.isPresent() && measurements.get().size() == 2){
+            if(measurements.isPresent() && measurements.get().size() >= 2){
                 List<int[]> measurement = measurements.get();
                 if(m.getPm25() >= 150 && measurement.get(0)[1] >= 150 && measurement.get(1)[1] >= 150) return AlertLevel.LEVEL1;
                 else if(m.getPm10() >= 300 && measurement.get(0)[0] >= 300 && measurement.get(1)[0] >= 300) return AlertLevel.LEVEL2;
